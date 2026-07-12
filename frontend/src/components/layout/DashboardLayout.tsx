@@ -209,34 +209,54 @@ export function DashboardLayout() {
                 {profileOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-56 glass-card rounded-xl shadow-glass border-border/50 overflow-hidden z-50 py-1"
+                    <motion.div 
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="absolute right-0 mt-3 w-64 bg-background/95 backdrop-blur-2xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border/50 overflow-hidden z-50 ring-1 ring-white/10"
                     >
-                      <div className="px-4 py-3 border-b border-border/50">
-                        <p className="text-sm font-medium leading-none mb-1">{user?.full_name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                      {/* Premium Gradient Header */}
+                      <div className="relative overflow-hidden px-4 py-5">
+                        <div className="absolute inset-0 from-primary/20 via-primary/5 to-transparent z-0 pointer-events-none" />
+                        <div className="relative z-10 flex items-center gap-3">
+                          <Avatar className="w-12 h-12 border-2 border-background shadow-sm ring-1 ring-border/50">
+                            <AvatarImage src={user?.avatar_url || `https://api.dicebear.com/7.x/notionists/svg?seed=${user?.full_name}`} />
+                            <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                              {user?.full_name?.charAt(0) || 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">{user?.full_name.toUpperCase() || 'User'}</p>
+                            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                            <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider bg-primary/10 text-primary rounded-full">
+                              {user?.role || 'Student'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="p-1">
+                      
+                      {/* Menu Items */}
+                      <div className="p-2 bg-background/50">
                         <Link
                           to="/profile"
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md"
+                          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 rounded-xl transition-all group"
                           onClick={() => setProfileOpen(false)}
                         >
-                          <Settings className="w-4 h-4" />
-                          Profile Settings
+                          <div className="p-1.5 rounded-lg bg-secondary group-hover:bg-background transition-colors shadow-sm ring-1 ring-border/50">
+                            <Settings className="w-4 h-4 text-primary" />
+                          </div>
+                          Account Settings
                         </Link>
                       </div>
-                      <div className="p-1 border-t border-border/50">
+
+                      {/* Footer */}
+                      <div className="p-2 border-t border-border/50 bg-background/50">
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-md"
+                          className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-xl transition-all group"
                         >
-                          <LogOut className="w-4 h-4" />
-                          Log out
+                          <div className="p-1.5 rounded-lg bg-destructive/10 group-hover:bg-background transition-colors shadow-sm ring-1 ring-destructive/20">
+                            <LogOut className="w-4 h-4" />
+                          </div>
+                          Sign Out
                         </button>
                       </div>
                     </motion.div>
