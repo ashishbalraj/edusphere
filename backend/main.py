@@ -14,6 +14,7 @@ app = FastAPI(
 )
 
 import os
+from fastapi.responses import FileResponse
 
 origins = [
     "http://localhost:5173",
@@ -40,6 +41,13 @@ app.include_router(ai.router, prefix=settings.API_V1_STR)
 app.include_router(analytics.router, prefix=settings.API_V1_STR)
 app.include_router(users.router, prefix=settings.API_V1_STR)
 app.include_router(notifications.router, prefix=settings.API_V1_STR)
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    file_path = os.path.join(os.path.dirname(__file__), "static", "favicon.ico")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"message": "No favicon"}
 
 @app.get("/")
 def root():
