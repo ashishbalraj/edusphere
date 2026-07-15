@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+# pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session
+# pyrefly: ignore [missing-import]
 from sqlalchemy import select
 from database import get_db
 from models import AIConversation, AIMessage, User
@@ -8,6 +10,7 @@ from schemas.core import (
     AIMessageCreate, AIMessageResponse,
 )
 from middleware.auth import get_current_user
+# pyrefly: ignore [missing-import]
 import google.generativeai as genai
 from config import settings
 
@@ -117,7 +120,7 @@ def send_message(
             role = "user" if msg.role == "user" else "model"
             gemini_history.append({"role": role, "parts": [msg.content]})
             
-        model = genai.GenerativeModel('gemini-2.5-flash-lite')
+        model = genai.GenerativeModel('gemini-3.1-flash-lite')
         chat = model.start_chat(history=gemini_history)
         
         system_prompt = f"You are an AI assistant in EduSphere, an intelligent learning platform. You are currently acting as a {conversation.module_type}. Context about the conversation: Title - {conversation.title}, Subject - {conversation.subject}. Be helpful, concise, and educational."
