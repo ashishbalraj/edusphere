@@ -412,7 +412,7 @@ Return ONLY raw JSON, no markdown blocks.`;
 
           {/* Calendar Grid */}
           {viewMode === 'week' ? (
-            <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {weekPlan.map((day, dayIdx) => {
                 const dayTotal = day.blocks.reduce((a, b) => a + b.duration, 0);
                 const dayCompleted = day.blocks.filter(b => b.completed).reduce((a, b) => a + b.duration, 0);

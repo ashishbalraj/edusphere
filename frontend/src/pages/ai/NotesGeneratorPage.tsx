@@ -12,7 +12,6 @@ import {
   UploadCloud,
   Sparkles,
   Download,
-  Save,
   RefreshCcw,
   LayoutTemplate
 } from 'lucide-react';
@@ -67,8 +66,8 @@ export default function NotesGeneratorPage() {
   const [level, setLevel] = useState('Undergraduate');
   const [style, setStyle] = useState('Detailed & Structured');
 
-  const handleGenerate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGenerate = async (e?: React.FormEvent | React.MouseEvent) => {
+    if (e && e.preventDefault) e.preventDefault();
     if (!topic.trim()) return;
 
     setIsGenerating(true);
@@ -99,9 +98,11 @@ Please structure the response clearly in markdown format.`;
     }
   };
 
+
+
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex items-center justify-between mb-6 shrink-0">
+    <div className="h-[calc(100vh-8rem)] flex flex-col print:h-auto print:block">
+      <div className="flex items-center justify-between mb-6 shrink-0 print:hidden">
         <div>
           <h1 className="text-3xl font-display font-bold flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
@@ -113,7 +114,7 @@ Please structure the response clearly in markdown format.`;
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 print:hidden">
         {/* Left Pane - Configuration */}
         <div className="lg:col-span-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
           <GlassCard className="p-6">
@@ -225,14 +226,11 @@ Please structure the response clearly in markdown format.`;
                     animate={{ opacity: 1, x: 0 }}
                     className="flex gap-2"
                   >
-                    <Button variant="outline" size="sm" className="h-8">
+                    <Button variant="outline" size="sm" className="h-8" onClick={handleGenerate}>
                       <RefreshCcw className="w-3.5 h-3.5 mr-1.5" /> Regenerate
                     </Button>
-                    <Button variant="outline" size="sm" className="h-8">
+                    <Button variant="outline" size="sm" className="h-8" onClick={() => window.print()}>
                       <Download className="w-3.5 h-3.5 mr-1.5" /> Export PDF
-                    </Button>
-                    <Button variant="default" size="sm" className="h-8">
-                      <Save className="w-3.5 h-3.5 mr-1.5" /> Save to Library
                     </Button>
                   </motion.div>
                 )}
@@ -276,6 +274,24 @@ Please structure the response clearly in markdown format.`;
             </ScrollArea>
           </GlassCard>
         </div>
+      </div>
+
+      {/* Print-only Content */}
+      <div className="hidden print:block w-full max-w-4xl mx-auto py-8">
+        <h1 className="text-3xl font-display font-bold mb-6 pb-4 border-b border-border/50">
+          {topic ? `Notes on: ${topic}` : 'Generated Notes'}
+        </h1>
+        {generatedNotes && (
+          <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none 
+                         prose-headings:font-display prose-h1:text-3xl prose-h1:text-primary 
+                         prose-h2:text-2xl prose-h2:border-b prose-h2:border-border/50 prose-h2:pb-2 
+                         prose-a:text-primary hover:prose-a:text-primary/80
+                         prose-pre:bg-background/80 prose-pre:border prose-pre:border-border/50">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {generatedNotes}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
     </div>
   );
